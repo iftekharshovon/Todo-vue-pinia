@@ -1,20 +1,27 @@
 <template>
-  <div>
-    <input v-model="newTodo" @keyup.enter="addTodo" placeholder="What needs to be done?" />
-  </div>
+  <form @submit.prevent="addItem(todo)">
+    <input type="text" v-model="todo" /><button>Add</button>
+  </form>
 </template>
 
-<script setup>
+<script>
 import { ref } from 'vue'
-
-
-const newTodo = ref('')
 import { useTodoListStore } from '../stores/todoList'
-const todosStore = useTodoListStore()
-const addTodo = () => {
-  if (newTodo.value.trim() !== '') {
-    todosStore.addTodo(newTodo.value.trim())
-    newTodo.value = ''
+
+export default {
+  setup() {
+    const todo = ref('')
+    const store = useTodoListStore()
+
+    function addItem(item) {
+      if (item.length === 0) {
+        return
+      }
+      store.addTodo(item)
+      todo.value = ''
+    }
+
+    return { todo, addItem }
   }
 }
 </script>
